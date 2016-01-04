@@ -9,6 +9,7 @@ import matplotlib.image as mpimpg
 
 def main(argv):
     filename = ''
+    up = 2 # TODO: Make sure it's not less than zero
 
     # Make sure that the argument is correct
     if len(argv) != 2:
@@ -24,7 +25,18 @@ def main(argv):
     except:
         sys.exit("Unexpected error", sys.exc_info()[0])
 
-    imshow(img)
+    sizeIm = img.shape
+
+    # Set up a new image with the up factor (2 = double image size)
+    canvas = np.zeros((sizeIm[0]*up, sizeIm[1]*up, 4))
+
+    # Nearest neighbour - simply take the nearest pixel and stretch to fill
+    # empty pixel spaces
+    for (x,y,z), value in np.ndenumerate(img):
+        canvas[x*up:x*up+up,y*up:y*up+up,z] = value
+
+    figure(1);imshow(img)
+    figure(2);imshow(canvas)
     pause(10)
     
 
