@@ -9,13 +9,19 @@ import matplotlib.image as mpimpg
 
 def main(argv):
     filename = ''
-    up = 2 # TODO: Make sure it's not less than zero
+    up = 2 
 
     # Make sure that the argument is correct
-    if len(argv) != 2:
-        sys.exit('Usage: python nearest_neighbour.py <filename>')
+    if len(argv) != 3:
+        sys.exit('Usage: python nearest_neighbour.py <filename> <up_factor>')
     else:
         filename = argv[1]
+        up = int(float(argv[2]))
+
+    # Check the up factor given is unacceptable
+    # Keep it below 10 for now...
+    if (up < 1) or (up > 10):
+        sys.exit('Please restrict your up factor to be between 1 and 10')
 
     # Try to read the image given the file name
     try:
@@ -35,8 +41,10 @@ def main(argv):
     for (x,y,z), value in np.ndenumerate(img):
         canvas[x*up:x*up+up,y*up:y*up+up,z] = value
 
+    # Show the original image and the image after nearest neighbour
     figure(1);imshow(img)
     figure(2);imshow(canvas)
+    # Pause it so that it appears when calling from terminal
     pause(10)
     
 
