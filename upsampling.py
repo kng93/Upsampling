@@ -13,7 +13,7 @@ def main(argv):
 
     # Make sure that the argument is correct
     if len(argv) != 3:
-        sys.exit('Usage: python nearest_neighbour.py <filename> <up_factor>')
+        sys.exit('Usage: python upsampling.py <filename> <up_factor>')
     else:
         filename = argv[1]
         up = int(float(argv[2]))
@@ -34,16 +34,19 @@ def main(argv):
     sizeIm = img.shape
 
     # Set up a new image with the up factor (2 = double image size)
-    canvas = np.zeros((sizeIm[0]*up, sizeIm[1]*up, 4))
+    nn_canvas = np.zeros((sizeIm[0]*up, sizeIm[1]*up, 4))
 
     # Nearest neighbour - simply take the nearest pixel and stretch to fill
     # empty pixel spaces
     for (x,y,z), value in np.ndenumerate(img):
-        canvas[x*up:x*up+up,y*up:y*up+up,z] = value
+        nn_canvas[x*up:x*up+up,y*up:y*up+up,z] = value
+
+    # Bilinear interpolation
+    # ???
 
     # Show the original image and the image after nearest neighbour
     figure(1);imshow(img)
-    figure(2);imshow(canvas)
+    figure(2);imshow(nn_canvas)
     # Pause it so that it appears when calling from terminal
     pause(10)
     
