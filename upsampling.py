@@ -16,7 +16,7 @@ def main(argv):
         sys.exit('Usage: python upsampling.py <filename> <up_factor>')
     else:
         filename = argv[1]
-        up = int(float(argv[2]))
+        up = float(argv[2])
 
     # Check the up factor given is unacceptable
     # Keep it below 10 for now...
@@ -34,13 +34,22 @@ def main(argv):
     sizeIm = img.shape
 
     # Set up a new image with the up factor (2 = double image size)
-    nn_canvas = np.zeros((sizeIm[0]*up, sizeIm[1]*up, 4))
+    nn_canvas = np.zeros((round(sizeIm[0]*up), round(sizeIm[1]*up), 4))
 
-    # Nearest neighbour - simply take the nearest pixel and stretch to fill
-    # empty pixel spaces
+    # Nearest neighbour - take the nearest pixel and stretch to fill
+    ###################
+    # Get the the scaling factor the rows and columns after rounding
+    upx = float(round(sizeIm[0]*up))/sizeIm[0]
+    upy = float(round(sizeIm[1]*up))/sizeIm[1]
+
+    # Iterate through the original pixels and fill in the new canvas
     for (x,y,z), value in np.ndenumerate(img):
-        nn_canvas[x*up:x*up+up,y*up:y*up+up,z] = value
-
+        print 'x',round(x*upx),round(x*upx+upx)
+        print 'y',round(y*upy),round(y*upy+upy)
+        nn_canvas[round(x*upx):round(x*upx+upx),
+                  round(y*upy):round(y*upy+upy),z] = value
+    ###################
+    
     # Bilinear interpolation
     # ???
 
